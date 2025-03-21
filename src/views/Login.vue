@@ -48,21 +48,16 @@ const login = async () => {
 }
 
 //发送验证码
-const send = async () => {
+const send = () => {
     if (!isValidEmail(user.email)) {
         ElMessage.error("请检查邮箱是否填写正确")
     } else {
-        const result = await sendService(user.email);
-        if (result.code === 1) {
-            //验证码发送成功
-            ElMessage.success("发送成功,请检查邮箱")
-            //接受返回的验证码持续的时间
-            duration.value = result.data;
-            disableButton();//禁用按钮
-        } else {
-            //发送失败
-            ElMessage.error(result.msg);
-        }
+        disableButton();//禁用按钮
+        ElMessage.success("发送成功,请检查邮箱")
+        sendService(user.email);
+        //接受返回的验证码持续的时间
+        //前端定义时间，如果时间由后端决定则需要等待发送成功 看起来会卡顿
+        // duration.value = result.data;
     }
 }
 

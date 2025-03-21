@@ -2,35 +2,32 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 // 导入页面组件
-import LoginVue from '@/views/Login.vue';
-import ResidentVue from '@/views/Resident.vue';
-// import FollowVue from '@/views/Follow.vue';
-// import ArticleDetailVue from '@/views/detailPages/ArticleDetail.vue';
-// import ScenicSpotDetailVue from '@/views/detailPages/ScenicSpotDetail.vue';
-// import MyVue from "@/views/selfPage/My.vue";
-// import WriteArticleVue from '@/views/write/WriteArticle.vue';
-// import MyArticleVue from '@/views/selfPage/selfInfo/MyArticle.vue';
-// import MyFollowVue from '@/views/selfPage/selfInfo/MyFollow.vue';
-// import MyLikeVue from '@/views/selfPage/selfInfo/MyLike.vue';
-// import MyCollectionVue from '@/views/selfPage/selfInfo/MyCollection.vue';
-
-
+import Login from '@/views/Login.vue';
+import Resident from '@/views/Resident.vue';
+import Medical from '@/views/Medical.vue';
+import Admin from '@/views/Admin.vue';
+import Consultation from '@/views/resident/Consultation.vue';
+import Appointment from '@/views/resident/Appointment.vue';
+import Activity from '@/views/resident/Activity.vue';
+import SelfInfo from '@/views/resident/archives/SelfInfo.vue';
+import HealthInfo from '@/views/resident/archives/HealthInfo.vue';
+import MedicalRecord from '@/views/resident/archives/MedicalRecord.vue';
 // 定义路由关系
 const routes = [
-    { path: '/login', component: LoginVue },
-    { path: '/resident', component: ResidentVue },
-    // { path: '/follow', component: FollowVue },
-    // { name: 'ArticleDetail', path: '/articleDetail/:articleId', component: ArticleDetailVue },
-    // { name: 'ScenicSpotDetail', path: '/scenicSpotDetail/:scenicSpotId', component: ScenicSpotDetailVue },
-    // {
-    //     path: '/my', component: MyVue, redirect: '/my/article', children: [
-    //         { path: '/my/article', component: MyArticleVue },
-    //         { path: '/my/follow', component: MyFollowVue },
-    //         { path: '/my/like', component: MyLikeVue },
-    //         { path: '/my/collection', component: MyCollectionVue },
-    //     ]
-    // },
-    // { path: '/writeArticle', component: WriteArticleVue }
+    { path: '/', redirect:'/login' },
+    { path: '/login', component: Login },
+    {
+        path: '/resident', component: Resident, redirect: '/resident/archives/self-info', children: [
+            { path: '/resident/archives/self-info', component: SelfInfo },
+            { path: '/resident/archives/health-info', component: HealthInfo },
+            { path: '/resident/archives/Medical-record', component: MedicalRecord },
+            { path: '/resident/consultation', component: Consultation },
+            { path: '/resident/appointment', component: Appointment },
+            { path: '/resident/activity', component: Activity },
+        ]
+    },
+    { path: '/medical', component: Medical },
+    { path: '/admin', component: Admin }
 ];
 
 // 创建路由器

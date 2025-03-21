@@ -19,3 +19,13 @@ export const sendService = (email) => {
 export const changePasswordService=(user)=>{
     return request.post("/changePassword",user);
 }
+
+//查询用户账号信息
+export const getUserInfoService=()=>{
+    return request.get("/userInfo/query");
+}
+
+//修改账号信息
+export const updateUserInfoService=(user)=>{
+    return request.post("/userInfo/update",user)
+}
