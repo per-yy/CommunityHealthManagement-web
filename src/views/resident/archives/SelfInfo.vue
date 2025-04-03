@@ -1,6 +1,7 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue';
-import { getResidentInfoService, getHealthInfoService, updateHealthInfoService, updateResidentInfoService } from '@/api/resident';
+import { getResidentInfoService, updateResidentInfoService } from '@/api/resident';
+import { updateHealthInfoService, getHealthInfoService } from '@/api/healthInfo';
 import { getUserInfoService, updateUserInfoService } from '@/api/user';
 import { ElMessage } from 'element-plus';
 
@@ -73,7 +74,7 @@ const updateResidentInfo = () => {
 }
 //修改居民健康信息
 const updateHealthInfo = () => {
-    if (healthInfo.value.height > 0 && healthInfo.value.weight > 0 && healthInfo.value.rate > 0 &&
+    if (healthInfo.value.height > 0 && healthInfo.value.weight > 0 && healthInfo.value.heartRate > 0 &&
         healthInfo.value.bloodPressure > 0 && healthInfo.value.bloodFat > 0 && healthInfo.value.bloodGlucose > 0) {
         updateHealthInfoDialog.value = false;
         updateHealthInfoService(healthInfo.value);
@@ -110,10 +111,15 @@ onBeforeMount(async () => {
                 <template #extra>
                     <el-button type="info" plain @click="updateResidentInfoDialog = true">编辑</el-button>
                 </template>
-                <el-descriptions-item label="姓名">{{ residentInfo.name }}</el-descriptions-item>
-                <el-descriptions-item label="性别">{{ residentInfo.gender == 1 ? '男' : '女' }}</el-descriptions-item>
-                <el-descriptions-item label="年龄">{{ residentInfo.age }}</el-descriptions-item>
-                <el-descriptions-item label="家庭住址">{{ residentInfo.address }}</el-descriptions-item>
+                <el-descriptions-item label="姓名">{{ residentInfo.name == null ? '暂无' : residentInfo.name
+                }}</el-descriptions-item>
+                <el-descriptions-item label="性别">{{ residentInfo.gender == 1 ? '男' : (residentInfo.gender == 0 ? '女' :
+                    '暂无')
+                    }}</el-descriptions-item>
+                <el-descriptions-item label="年龄">{{ residentInfo.age == 0 ? '暂无' : residentInfo.age
+                }}</el-descriptions-item>
+                <el-descriptions-item label="家庭住址">{{ residentInfo.address == null ? '暂无' : residentInfo.address
+                }}</el-descriptions-item>
             </el-descriptions>
             <el-divider />
 
@@ -122,22 +128,22 @@ onBeforeMount(async () => {
                 <template #extra>
                     <el-button type="info" plain @click="updateHealthInfoDialog = true">编辑</el-button>
                 </template>
-                <el-descriptions-item label="身高(CM)">{{ healthInfo.height == null ? '暂无' : healthInfo.height
+                <el-descriptions-item label="身高(CM)">{{ healthInfo.height == 0 ? '暂无' : healthInfo.height
                     }}</el-descriptions-item>
-                <el-descriptions-item label="体重(KG)">{{ healthInfo.weight == null ? '暂无' : healthInfo.weight
+                <el-descriptions-item label="体重(KG)">{{ healthInfo.weight == 0 ? '暂无' : healthInfo.weight
                     }}</el-descriptions-item>
-                <el-descriptions-item label="BMI">{{ healthInfo.bmi == null ? '暂无' : healthInfo.bmi
+                <el-descriptions-item label="BMI">{{ healthInfo.bmi == 0 ? '暂无' : healthInfo.bmi
                 }}</el-descriptions-item>
-                <el-descriptions-item label="心率(bpm)">{{ healthInfo.heartRate == null ? '暂无' : healthInfo.heartRate
+                <el-descriptions-item label="心率(bpm)">{{ healthInfo.heartRate == 0 ? '暂无' : healthInfo.heartRate
                     }}</el-descriptions-item>
                 <el-descriptions-item label="血型">{{ healthInfo.bloodType == null ? '暂无' : healthInfo.bloodType
                     }}</el-descriptions-item>
-                <el-descriptions-item label="血压(mmHg)">{{ healthInfo.bloodPressure == null ? '暂无' :
+                <el-descriptions-item label="血压(mmHg)">{{ healthInfo.bloodPressure == 0 ? '暂无' :
                     healthInfo.bloodPressure
                 }}</el-descriptions-item>
-                <el-descriptions-item label="血脂(mmol/L)">{{ healthInfo.bloodFat == null ? '暂无' : healthInfo.bloodFat
+                <el-descriptions-item label="血脂(mmol/L)">{{ healthInfo.bloodFat == 0 ? '暂无' : healthInfo.bloodFat
                     }}</el-descriptions-item>
-                <el-descriptions-item label="血糖(mmol/L)">{{ healthInfo.bloodGlucose == null ? '暂无' :
+                <el-descriptions-item label="血糖(mmol/L)">{{ healthInfo.bloodGlucose == 0 ? '暂无' :
                     healthInfo.bloodGlucose
                 }}</el-descriptions-item>
                 <el-descriptions-item label="病史">{{ healthInfo.medicalHistory == null ? '暂无' : healthInfo.medicalHistory
@@ -243,7 +249,7 @@ onBeforeMount(async () => {
 
 <style scoped>
 .el-scrollbar {
-    width: 100% !important;
+    width: 90% !important;
 }
 
 .el-card {

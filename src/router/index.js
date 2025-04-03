@@ -10,7 +10,7 @@ import Consultation from '@/views/resident/Consultation.vue';
 import Appointment from '@/views/resident/Appointment.vue';
 import Activity from '@/views/resident/Activity.vue';
 import SelfInfo from '@/views/resident/archives/SelfInfo.vue';
-import HealthInfo from '@/views/resident/archives/HealthInfo.vue';
+import HealthReport from '@/views/resident/archives/HealthReport.vue';
 import MedicalRecord from '@/views/resident/archives/MedicalRecord.vue';
 // 定义路由关系
 const routes = [
@@ -19,8 +19,8 @@ const routes = [
     {
         path: '/resident', component: Resident, redirect: '/resident/archives/self-info', children: [
             { path: '/resident/archives/self-info', component: SelfInfo },
-            { path: '/resident/archives/health-info', component: HealthInfo },
             { path: '/resident/archives/Medical-record', component: MedicalRecord },
+            { path: '/resident/archives/health-report', component: HealthReport },
             { path: '/resident/consultation', component: Consultation },
             { path: '/resident/appointment', component: Appointment },
             { path: '/resident/activity', component: Activity },
