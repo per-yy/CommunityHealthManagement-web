@@ -4,18 +4,27 @@ import { getMedicalRecordService, addMedicalRecordService, deleteMedicalRecordSe
 import { ElMessage } from 'element-plus';
 const addMedicalRecordDialog = ref(false)
 //诊断记录
-const medicalRecord = ref([])
+const medicalRecord = ref({})
 
 //用于添加的就诊记录
 const medicalRecordForAdd = ref({})
-
+//分页查询时的当前页和页面大小
+const pageQueryDto = ref({
+    pageNum: 1,
+    pageSize: 10
+})
 //就诊类型
 const visitType = ref(['门诊', '急诊', '住院'])
 
 //查询居民就诊记录
 const getMedicalRecord = async () => {
-    let result = await getMedicalRecordService();
+    let result = await getMedicalRecordService(pageQueryDto.value);
     medicalRecord.value = result.data;
+}
+//换页查询
+const pageChange = async (newPage) => {
+    pageQueryDto.value.pageNum = newPage;
+    await getMedicalRecord();
 }
 //添加就诊记录
 const addMedicalRecord = async () => {
@@ -50,15 +59,16 @@ onBeforeMount(async () => {
     <el-card>
         <div class="option">
             <h4>就诊记录</h4>
-            <el-button plain type="info" @click="addMedicalRecordDialog = true">添加记录</el-button>
+            <el-button plain type="success" @click="addMedicalRecordDialog = true">添加记录</el-button>
         </div>
-        <el-table :data="medicalRecord" border style="width: 100%" stripe
+        <el-table :data="medicalRecord.items" border style="width: 100%" stripe
             :default-sort="{ prop: 'visitTime', order: 'descending' }">
-            <el-table-column prop="visitTime" label="时间" sortable />
-            <el-table-column prop="visitType" label="类型" />
-            <el-table-column prop="hospital" label="地点" />
-            <el-table-column prop="department" label="科室" />
-            <el-table-column prop="doctor" label="医生" />
+            <el-table-column type="index" width="60" label="序号" />
+            <el-table-column prop="visitTime" label="时间" sortable width="120px" />
+            <el-table-column prop="visitType" label="类型" width="60px" />
+            <el-table-column prop="hospital" label="地点" width="180px"/>
+            <el-table-column prop="department" label="科室" width="180px" />
+            <el-table-column prop="doctor" label="医生" width="150px"/>
             <el-table-column prop="diagnosticResult" label="诊断结果" />
             <el-table-column label="操作" width="75px">
                 <template #default="scope">
@@ -68,6 +78,10 @@ onBeforeMount(async () => {
                 </template>
             </el-table-column>
         </el-table>
+        <div style="display: flex;justify-content: center; margin-top: 20px;">
+            <el-pagination background layout="prev, pager, next" :page-size="pageQueryDto.pageSize"
+                :total="medicalRecord.total" @current-change="pageChange" />
+        </div>
     </el-card>
     <!-- 添加就诊记录 -->
     <el-dialog v-model="addMedicalRecordDialog" title="添加就诊记录" width="300" align-center center>

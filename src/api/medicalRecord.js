@@ -1,7 +1,7 @@
 import request from '../utils/request.js'
 //查询居民就诊记录
-export const getMedicalRecordService=()=>{
-    return request.get("/medicalRecord/query")
+export const getMedicalRecordService=(pageQueryDto)=>{
+    return request.post("/medicalRecord/query",pageQueryDto)
 }
 
 //添加居民就诊记录
