@@ -47,7 +47,7 @@ const deleteConsultation = async (row) => {
 //发起咨询
 const addConsultation = async () => {
     await addConsultationService(consultationForAdd.value);
-    addConsultationDialog.value=false;
+    addConsultationDialog.value = false;
     ElMessage.success("发布成功");
     await getConsultation();
 }
@@ -84,22 +84,14 @@ onBeforeMount(async () => {
             <el-pagination background layout="prev, pager, next" :page-size="pageQueryDto.pageSize"
                 :total="consultation.total" @current-change="pageChange" />
         </div>
-
     </el-card>
     <!-- 查看回复 -->
     <el-dialog v-model="consultationReplyDialog" title="回复" width="320px" align-center center>
-        <div class="reply-content">
-            <span>回复医生：</span>
-            <span>{{ singleConsultation.doctorName }}</span>
-        </div>
-        <div class="reply-content">
-            <span>回复内容：</span>
-            <span>{{ singleConsultation.replyContent }}</span>
-        </div>
-        <div class="reply-content">
-            <span>回复时间：</span>
-            <span>{{ singleConsultation.replyTime }}</span>
-        </div>
+        <el-descriptions column="1" size="large" border>
+            <el-descriptions-item label="回复医生">{{ singleConsultation.doctorName }}</el-descriptions-item>
+            <el-descriptions-item label="回复内容">{{singleConsultation.replyContent}}</el-descriptions-item>
+            <el-descriptions-item label="回复时间">{{ singleConsultation.replyTime }}</el-descriptions-item>
+        </el-descriptions>
     </el-dialog>
     <!-- 新增咨询 -->
     <el-dialog v-model="addConsultationDialog" title="发起咨询" width="300" align-center center>
@@ -141,10 +133,5 @@ onBeforeMount(async () => {
 
 .el-pagination {
     margin: 0 auto;
-}
-
-.reply-content div {
-    font-size: medium;
-    padding: 5px;
 }
 </style>
