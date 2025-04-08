@@ -53,7 +53,6 @@ onBeforeMount(async () => {
             <el-table-column type="index" width="60" label="序号" />
             <el-table-column prop="type" label="活动类型" width="120px" />
             <el-table-column prop="title" label="标题" />
-            <el-table-column prop="location" label="活动地点" width="150px" />
             <el-table-column prop="startTime" label="开始时间" width="165px" />
             <el-table-column prop="endTime" label="结束时间" width="165px" />
             <el-table-column prop="capacity" label="名额上限" width="85px" />
@@ -79,6 +78,7 @@ onBeforeMount(async () => {
     <el-dialog v-model="showDetailDialog" title="活动详情" width="500px" align-center center>
         <el-descriptions column="1" size="large" border label-width="90px">
             <el-descriptions-item label="主办方">{{ singleActivity.organizer }}</el-descriptions-item>
+            <el-descriptions-item label="地点">{{ singleActivity.location }}</el-descriptions-item>
             <el-descriptions-item label="详情">{{ singleActivity.description }}</el-descriptions-item>
         </el-descriptions>
         <template #footer>
