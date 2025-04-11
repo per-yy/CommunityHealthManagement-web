@@ -36,8 +36,9 @@ const login = async () => {
         let result = await loginService(user);
         if (result.code == 1) {
             console.log("登陆成功");
-            //存储token
+            //存储token和role
             tokenStore.setToken(result.data);
+            tokenStore.setRole(user.role);
             //跳转页面 用户的角色名即为跳转的路径名
             router.push(user.role);
         } else {
@@ -131,7 +132,7 @@ const changePassword = async () => {
             <el-form-item>
                 <el-radio-group v-model="user.role">
                     <el-radio :value="'resident'">居民</el-radio>
-                    <el-radio :value="'medical'">医护人员</el-radio>
+                    <el-radio :value="'doctor'">医护人员</el-radio>
                     <el-radio :value="'admin'">管理员</el-radio>
                 </el-radio-group>
             </el-form-item>
@@ -175,7 +176,7 @@ const changePassword = async () => {
             <el-form-item>
                 <el-radio-group v-model="user.role">
                     <el-radio :value="'resident'">居民</el-radio>
-                    <el-radio :value="'medical'">医护人员</el-radio>
+                    <el-radio :value="'doctor'">医护人员</el-radio>
                     <el-radio :value="'admin'">管理员</el-radio>
                 </el-radio-group>
             </el-form-item>
@@ -211,11 +212,10 @@ const changePassword = async () => {
             <el-form-item>
                 <el-radio-group v-model="user.role">
                     <el-radio :value="'resident'">居民</el-radio>
-                    <el-radio :value="'medical'">医护人员</el-radio>
+                    <el-radio :value="'doctor'">医护人员</el-radio>
                     <el-radio :value="'admin'">管理员</el-radio>
                 </el-radio-group>
             </el-form-item>
-
             <el-form-item>
                 <el-button class="form-item btn-affirm" type="primary" @click="changePassword()">修改</el-button>
             </el-form-item>
@@ -225,7 +225,6 @@ const changePassword = async () => {
             <span @click="pageState = 'register'">注册</span>
         </div>
     </el-card>
-
 </template>
 
 <style scoped>

@@ -1,5 +1,5 @@
 import request from '../utils/request.js'
-//查询居民就诊记录
+//查询居民就诊记录 后端根据角色判断返回对应数据
 export const getMedicalRecordService=(pageQueryDto)=>{
     return request.post("/medicalRecord/query",pageQueryDto)
 }

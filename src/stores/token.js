@@ -11,19 +11,26 @@ export const useTokenStore = defineStore('token', () => {
 
     //响应式变量
     const token = ref("")
+    const role=ref("")
 
     //定义一个函数，用来修改token
     const setToken = (newToken) => {
         token.value = newToken
+    }
+    const setRole=(newRole)=>{
+        role.value=newRole;
     }
 
     //移除token的函数同时清空用户信息
     const removeToken = () => {
         token.value = '';
     }
+    const removeRole=()=>{
+        role.value=''
+    }
 
     return {
-        token, setToken, removeToken
+        token, role,setToken, setRole,removeToken,removeRole
     }
 }, {
     //持久化存储

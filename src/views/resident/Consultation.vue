@@ -68,6 +68,9 @@ const beforeImgUpload = (rawFile) => {
     }
     return true;
 }
+const handleImgRemove = () => {
+
+}
 onBeforeMount(async () => {
     await getConsultation();
 })
@@ -126,8 +129,8 @@ onBeforeMount(async () => {
                 <el-input v-model="consultationForAdd.content" style="width: 200px;" type="textarea" />
             </el-form-item>
             <el-form-item label="图片">
-                <el-upload class="img-uploader" action="/api/upload" name="image" :show-file-list="false" :method="post"
-                    :on-success="handleImgSuccess" :before-upload="beforeImgUpload">
+                <el-upload class="img-uploader" action="/api/upload" name="image" :show-file-list="false"
+                    :on-success="handleImgSuccess" :before-upload="beforeImgUpload" :on-remove="handleImgRemove">
                     <img v-if="consultationForAdd.url" :src="consultationForAdd.url" class="img" />
                     <el-icon v-else class="img-uploader-icon">
                         <Plus />

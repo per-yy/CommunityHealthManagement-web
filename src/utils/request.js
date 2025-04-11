@@ -28,7 +28,7 @@ instance.interceptors.response.use(
         return result.data;
     },
     err => {
-        //判断是否登录或登录是否过期
+        //判断是否登录或登录是否过期、是否为本角色的访问
         if (err.response.status === 401) {
             const tokenStore = useTokenStore();
             if (tokenStore.token) {
@@ -37,6 +37,9 @@ instance.interceptors.response.use(
                 ElMessage.error('请先登录')
             }
             router.push('/login')
+        } else if (err.response.status === 403) {
+            ElMessage.error("非法访问")
+            router.push("/login")
         } else {
             ElMessage.error('服务异常')
         }

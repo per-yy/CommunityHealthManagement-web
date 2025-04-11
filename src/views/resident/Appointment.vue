@@ -10,7 +10,7 @@ const addAppointmentDialog = ref(false)
 //分页查询时的当前页和页面大小
 const pageQueryDto = ref({
     pageNum: 1,
-    pageSize: 5
+    pageSize: 10
 })
 const appointment = ref({})
 const appointmentForAdd = ref({})
@@ -103,7 +103,7 @@ onBeforeMount(async () => {
         </div>
         <el-table :data="appointment.items" border style="width: 100%" stripe>
             <el-table-column type="index" width="60" label="序号" />
-            <el-table-column prop="hospital" label="医院" width="120px" />
+            <el-table-column prop="hospital" label="医院" width="150px" />
             <el-table-column prop="department" label="科室" />
             <el-table-column prop="doctor" label="医生  " />
             <el-table-column label="时间段" width="360px">
