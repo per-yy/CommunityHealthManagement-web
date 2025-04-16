@@ -58,37 +58,40 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <el-card>
-        <div class="option">
-            <h4>全部咨询</h4>
-        </div>
-        <el-table :data="consultation.items" border style="width: 100%" stripe>
-            <el-table-column type="index" width="60" label="序号" />
-            <el-table-column prop="residentName" width="100" label="居民" />
-            <el-table-column prop="title" label="标题" width="200px" />
-            <el-table-column prop="content" label="咨询内容" />
-            <el-table-column label="图片" width="225px">
-                <template #default="scope">
-                    <el-image :src="scope.row.url" :preview-src-list="[scope.row.url]" fit="contain" class="img-show"
-                        hide-on-click-modal preview-teleported :z-index="9" title="点击放大显示">
-                    </el-image>
-                </template>
-            </el-table-column>
-            <el-table-column prop="createTime" label="发起时间" width="180px" />
-            <el-table-column fixed="right" label="操作" width="120">
-                <template #default="scope">
-                    <el-button link :type="scope.row.isReply == 1 ? 'success' : 'primary'" size="small"
-                        @click="operate(scope.row)">
-                        {{ scope.row.isReply == 1 ? '查看回复' : '回复' }}
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div style="display: flex;margin-top: 20px;">
-            <el-pagination background layout="prev, pager, next" :page-size="pageQueryDto.pageSize"
-                :total="consultation.total" @current-change="pageChange" />
-        </div>
-    </el-card>
+    <el-scrollbar height="670px">
+        <el-card>
+            <div class="option">
+                <h4>全部咨询</h4>
+            </div>
+            <el-table :data="consultation.items" border style="width: 100%" stripe>
+                <el-table-column type="index" width="60" label="序号" />
+                <el-table-column prop="residentName" width="100" label="居民" />
+                <el-table-column prop="title" label="标题" width="200px" />
+                <el-table-column prop="content" label="咨询内容" />
+                <el-table-column label="图片" width="225px">
+                    <template #default="scope">
+                        <el-image :src="scope.row.url" :preview-src-list="[scope.row.url]" fit="contain"
+                            class="img-show" hide-on-click-modal preview-teleported :z-index="9" title="点击放大显示">
+                        </el-image>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="createTime" label="发起时间" width="180px" />
+                <el-table-column fixed="right" label="操作" width="120">
+                    <template #default="scope">
+                        <el-button link :type="scope.row.isReply == 1 ? 'success' : 'primary'" size="small"
+                            @click="operate(scope.row)">
+                            {{ scope.row.isReply == 1 ? '查看回复' : '回复' }}
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div style="display: flex;margin-top: 20px;">
+                <el-pagination background layout="prev, pager, next" :page-size="pageQueryDto.pageSize"
+                    :total="consultation.total" @current-change="pageChange" />
+            </div>
+        </el-card>
+    </el-scrollbar>
+
     <!-- 查看回复 -->
     <el-dialog v-model="consultationReplyDialog" title="回复" width="320px" align-center center>
         <el-descriptions column="1" size="large" border>
@@ -116,8 +119,12 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+.el-scrollbar {
+    width: 90% !important;
+}
+
 .el-card {
-    width: 88% !important;
+    width: 98% !important;
     margin: 15px auto;
 }
 

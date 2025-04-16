@@ -2,7 +2,7 @@
 import { ref, onBeforeMount } from 'vue';
 import { getMedicalRecordService, addMedicalRecordService, deleteMedicalRecordService } from '@/api/medicalRecord';
 import { getDoctorSelfInfoService } from '@/api/doctor';
-import { getResidentListService } from '@/api/resident';
+import { getAllResidentService } from '@/api/resident';
 import { ElMessage } from 'element-plus';
 const addDiagnosticRecordDialog = ref(false)
 //诊断记录
@@ -38,7 +38,7 @@ const getDoctorInfo = async () => {
 }
 //查询医生基本信息
 const getResidentList = async () => {
-    let result = await getResidentListService();
+    let result = await getAllResidentService();
     residents.value = result.data;
 }
 //点击添加按钮

@@ -9,6 +9,11 @@ export const updateResidentInfoService = (residentInfo) => {
     return request.post("/resident/info/update", residentInfo)
 }
 //查询所有居民
-export const getResidentListService=()=>{
-    return request.get("/resident/list/query")
+export const getAllResidentService=()=>{
+    return request.get("/resident/all/query")
+}
+
+//管理端分页查询居民列表
+export const getResidentListService=(pageQueryDto)=>{
+    return request.post("/resident/list/query",pageQueryDto)
 }

@@ -113,6 +113,8 @@ onBeforeMount(async () => {
                 </template>
                 <el-descriptions-item label="姓名">{{ residentInfo.name == null ? '暂无' : residentInfo.name
                 }}</el-descriptions-item>
+                <el-descriptions-item label="身份证号">{{ residentInfo.idNumber == null ? '暂无' : residentInfo.idNumber
+                }}</el-descriptions-item>
                 <el-descriptions-item label="性别">{{ residentInfo.gender == 1 ? '男' : (residentInfo.gender == 0 ? '女' :
                     '暂无')
                     }}</el-descriptions-item>
@@ -178,6 +180,9 @@ onBeforeMount(async () => {
         <el-form class="form-update form-basic-info" label-width="70px" label-position="left">
             <el-form-item label="姓名">
                 <el-input v-model="residentInfo.name" />
+            </el-form-item>
+            <el-form-item label="身份证号">
+                <el-input v-model="residentInfo.idNumber" />
             </el-form-item>
             <el-form-item label="性别">
                 <el-select v-model="residentInfo.gender" style="width: 180px">
@@ -253,7 +258,7 @@ onBeforeMount(async () => {
 }
 
 .el-card {
-    width: 88% !important;
+    width: 98% !important;
     margin: 15px auto;
 }
 

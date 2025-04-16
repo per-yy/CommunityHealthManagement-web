@@ -5,19 +5,28 @@ import Login from '@/views/Login.vue';
 import Resident from '@/views/Resident.vue';
 import Doctor from '@/views/Doctor.vue';
 import Admin from '@/views/Admin.vue';
-
+// 居民端
 import ConsultationR from '@/views/resident/Consultation.vue';
 import AppointmentR from '@/views/resident/Appointment.vue';
 import ActivityR from '@/views/resident/Activity.vue';
 import ResidentInfo from '@/views/resident/archives/SelfInfo.vue';
 import HealthReport from '@/views/resident/archives/HealthReport.vue';
 import MedicalRecord from '@/views/resident/archives/MedicalRecord.vue';
-
+//医生端
 import DoctorInfo from '@/views/doctor/SelfInfo.vue';
 import DiagnosticRecord from '@/views/doctor/DiagnosticRecord.vue';
 import ConsultationD from '@/views/doctor/Consultation.vue';
 import AppointmentD from '@/views/doctor/Appointment.vue';
 import ActivityD from '@/views/doctor/Activity.vue';
+//管理端
+import ResidentA from '@/views/admin/user/Resident.vue';
+import DoctorA from '@/views/admin/user/Doctor.vue';
+import Hospital from '@/views/admin/community/Hospital.vue';
+import Department from '@/views/admin/community/Department.vue';
+import ActivityA from '@/views/admin/Activity.vue';
+import ConsultationA from '@/views/admin/Consultation.vue';
+import AppointmentA from '@/views/admin/Appointment.vue';
+import MedicalRecordA from '@/views/admin/MedicalRecord.vue';
 // 定义路由关系
 const staticRoutes = [
     { path: '/login', component: Login },
@@ -38,10 +47,21 @@ const staticRoutes = [
             { path: '/doctor/consultation', component: ConsultationD },
             { path: '/doctor/appointment', component: AppointmentD },
             { path: '/doctor/activity', component: ActivityD },
-
         ]
     },
-    { path: '/admin', component: Admin }
+    {
+        path: '/admin', component: Admin, redirect: '/admin/user/resident', children: [
+            { path: '/admin/user/resident', component: ResidentA },
+            { path: '/admin/user/doctor', component: DoctorA },
+            { path: '/admin/community/hospital', component: Hospital },
+            { path: '/admin/community/department', component: Department },
+            { path: '/admin/consultation', component: ConsultationA },
+            { path: '/admin/activity', component: ActivityA },
+            { path: '/admin/appointment', component: AppointmentA },
+            { path: '/admin/medical-record', component: MedicalRecordA },
+
+        ]
+    }
 ];
 
 // 创建路由器

@@ -5,19 +5,18 @@ import { ElMessage } from 'element-plus';
 //诊断记录
 const medicalRecord = ref({})
 
-
 //分页查询时的当前页和页面大小
 const pageQueryDto = ref({
     pageNum: 1,
     pageSize: 10
 })
 
-
 //查询居民就诊记录
 const getMedicalRecord = async () => {
     let result = await getMedicalRecordService(pageQueryDto.value);
     medicalRecord.value = result.data;
 }
+
 //换页查询
 const pageChange = async (newPage) => {
     pageQueryDto.value.pageNum = newPage;
@@ -47,6 +46,7 @@ onBeforeMount(async () => {
             <el-table-column type="index" width="60" label="序号" />
             <el-table-column prop="visitTime" label="时间" sortable width="120px" />
             <el-table-column prop="visitType" label="类型" width="60px" />
+            <el-table-column prop="resident" label="居民" width="80px" />
             <el-table-column prop="hospital" label="地点" width="180px" />
             <el-table-column prop="department" label="科室" width="180px" />
             <el-table-column prop="doctor" label="医生" width="150px" />
@@ -64,7 +64,6 @@ onBeforeMount(async () => {
                 :total="medicalRecord.total" @current-change="pageChange" />
         </div>
     </el-card>
-
 </template>
 
 <style scoped>

@@ -29,3 +29,15 @@ export const getUserInfoService=()=>{
 export const updateUserInfoService=(user)=>{
     return request.post("/userInfo/update",user)
 }
+//根据居民id查询账号信息
+export const getUserInfoByResidentIdService=(residentId)=>{
+    return request.get(`/userInfo/resident/${residentId}`);
+}
+//删除用户
+export const deleteUserService=(userId)=>{
+    return request.delete(`/user/delete/${userId}`);
+}
+//根据医生id查询账号信息
+export const getUserInfoByDoctorIdService=(doctorId)=>{
+    return request.get(`/userInfo/doctor/${doctorId}`);
+}
