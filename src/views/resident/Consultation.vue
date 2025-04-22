@@ -77,7 +77,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-    <el-scrollbar height="670px">
+    <el-scrollbar height="650px">
         <el-card>
             <div class="option">
                 <h4>我的咨询</h4>

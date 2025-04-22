@@ -150,7 +150,8 @@ onBeforeMount(async () => {
                 <el-select v-model="appointmentForAdd.scheduleId" style="width: 360px" placeholder="选择"
                     :disabled="!appointmentForAdd.doctorId">
                     <el-option v-for="item in schedules" :key="item.id" :value="item.id"
-                        :label="item.startTime + ' ~ ' + item.endTime" />
+                        :label="`${item.startTime} ~ ${item.endTime}${item.capacity && item.reservedCount >= item.capacity ? ' 已满' : ''}`"
+                        :disabled="item.capacity != 0 && item.capacity <= item.reservedCount" />
                 </el-select>
             </el-form-item>
         </el-form>

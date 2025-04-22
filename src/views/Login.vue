@@ -113,121 +113,133 @@ const changePassword = async () => {
 
 </script>
 
+<script setup>
+</script>
 <template>
-    <div class="box-img">
+    <div class="container">
+        <div class="box-img">
+        </div>
+        <h1 class="title">社区健康管理系统</h1>
+
+        <!-- 登录 -->
+        <el-card class="card" v-if="pageState == 'login'">
+            <h2 class="card-text">登录</h2>
+            <el-form :model="user">
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.email" placeholder="邮箱" />
+                </el-form-item>
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.password" placeholder="密码" show-password
+                        @keydown.enter="login()" />
+                </el-form-item>
+
+                <el-form-item>
+                    <el-radio-group v-model="user.role">
+                        <el-radio :value="'resident'">居民</el-radio>
+                        <el-radio :value="'doctor'">医护人员</el-radio>
+                        <el-radio :value="'admin'">管理员</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button class="form-item btn-affirm" type="primary" @click="login()">登录</el-button>
+                </el-form-item>
+            </el-form>
+            <div class="other-option">
+                <span @click="pageState = 'forgetPassword'">忘记密码</span>
+                <span @click="pageState = 'register'">注册</span>
+            </div>
+        </el-card>
+        <!-- 注册 -->
+        <el-card class="card" v-if="pageState == 'register'">
+            <h2 class="card-text">注册</h2>
+            <el-form :model="user">
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.username" placeholder="用户名" />
+                </el-form-item>
+
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.password" placeholder="密码" show-password />
+                </el-form-item>
+
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.rePassword" placeholder="再次输入密码" show-password />
+                </el-form-item>
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.email" placeholder="邮箱" type="email" />
+                </el-form-item>
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.phone" placeholder="电话" type="number" />
+                </el-form-item>
+                <div class="box-code">
+                    <el-input class="input-code" v-model="user.verificationCode" placeholder="验证码" />
+                    <el-button class="send" type="success" :disabled="countDown !== duration" @click="send">{{ countDown
+                        < duration ? `${countDown}S` : '发送验证码' }} </el-button>
+                </div>
+
+                <el-form-item>
+                    <el-radio-group v-model="user.role">
+                        <el-radio :value="'resident'">居民</el-radio>
+                        <el-radio :value="'doctor'">医护人员</el-radio>
+                        <el-radio :value="'admin'">管理员</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button class="form-item btn-affirm" type="primary" @click="register()">注册</el-button>
+                </el-form-item>
+            </el-form>
+            <div class="other-option">
+                <span @click="pageState = 'forgetPassword'">忘记密码</span>
+                <span @click="pageState = 'login'">登录</span>
+            </div>
+        </el-card>
+        <!-- 忘记密码 -->
+        <el-card class="card" v-if="pageState == 'forgetPassword'">
+            <h2 class="card-text">修改密码</h2>
+            <el-form :model="user">
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.email" placeholder="邮箱" />
+                </el-form-item>
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.password" placeholder="新密码" show-password />
+                </el-form-item>
+                <el-form-item>
+                    <el-input class="form-item" v-model="user.rePassword" placeholder="再次输入密码" show-password />
+                </el-form-item>
+                <div class="box-code">
+                    <el-input class="input-code" v-model="user.verificationCode" placeholder="验证码" />
+                    <el-button class="send" type="success" :disabled="countDown !== duration" @click="send">{{ countDown
+                        < duration ? `${countDown}S` : '发送验证码' }} </el-button>
+                </div>
+
+                <el-form-item>
+                    <el-radio-group v-model="user.role">
+                        <el-radio :value="'resident'">居民</el-radio>
+                        <el-radio :value="'doctor'">医护人员</el-radio>
+                        <el-radio :value="'admin'">管理员</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item>
+                    <el-button class="form-item btn-affirm" type="primary" @click="changePassword()">修改</el-button>
+                </el-form-item>
+            </el-form>
+            <div class="other-option">
+                <span @click="pageState = 'login'">登录</span>
+                <span @click="pageState = 'register'">注册</span>
+            </div>
+        </el-card>
     </div>
-    <h1 class="title">社区健康管理系统</h1>
-    <!-- 登录 -->
-    <el-card class="card" v-if="pageState == 'login'">
-        <h2 class="card-text">登录</h2>
-        <el-form :model="user">
-            <el-form-item>
-                <el-input class="form-item" v-model="user.email" placeholder="邮箱" />
-            </el-form-item>
-            <el-form-item>
-                <el-input class="form-item" v-model="user.password" placeholder="密码" show-password
-                    @keydown.enter="login()" />
-            </el-form-item>
 
-            <el-form-item>
-                <el-radio-group v-model="user.role">
-                    <el-radio :value="'resident'">居民</el-radio>
-                    <el-radio :value="'doctor'">医护人员</el-radio>
-                    <el-radio :value="'admin'">管理员</el-radio>
-                </el-radio-group>
-            </el-form-item>
 
-            <el-form-item>
-                <el-button class="form-item btn-affirm" type="primary" @click="login()">登录</el-button>
-            </el-form-item>
-        </el-form>
-        <div class="other-option">
-            <span @click="pageState = 'forgetPassword'">忘记密码</span>
-            <span @click="pageState = 'register'">注册</span>
-        </div>
-    </el-card>
-    <!-- 注册 -->
-    <el-card class="card" v-if="pageState == 'register'">
-        <h2 class="card-text">注册</h2>
-        <el-form :model="user">
-            <el-form-item>
-                <el-input class="form-item" v-model="user.username" placeholder="用户名" />
-            </el-form-item>
 
-            <el-form-item>
-                <el-input class="form-item" v-model="user.password" placeholder="密码" show-password />
-            </el-form-item>
-
-            <el-form-item>
-                <el-input class="form-item" v-model="user.rePassword" placeholder="再次输入密码" show-password />
-            </el-form-item>
-            <el-form-item>
-                <el-input class="form-item" v-model="user.email" placeholder="邮箱" type="email" />
-            </el-form-item>
-            <el-form-item>
-                <el-input class="form-item" v-model="user.phone" placeholder="电话" type="number" />
-            </el-form-item>
-            <div class="box-code">
-                <el-input class="input-code" v-model="user.verificationCode" placeholder="验证码" />
-                <el-button class="send" type="success" :disabled="countDown !== duration" @click="send">{{ countDown <
-                    duration ? `${countDown}S` : '发送验证码' }} </el-button>
-            </div>
-
-            <el-form-item>
-                <el-radio-group v-model="user.role">
-                    <el-radio :value="'resident'">居民</el-radio>
-                    <el-radio :value="'doctor'">医护人员</el-radio>
-                    <el-radio :value="'admin'">管理员</el-radio>
-                </el-radio-group>
-            </el-form-item>
-
-            <el-form-item>
-                <el-button class="form-item btn-affirm" type="primary" @click="register()">注册</el-button>
-            </el-form-item>
-        </el-form>
-        <div class="other-option">
-            <span @click="pageState = 'forgetPassword'">忘记密码</span>
-            <span @click="pageState = 'login'">登录</span>
-        </div>
-    </el-card>
-    <!-- 忘记密码 -->
-    <el-card class="card" v-if="pageState == 'forgetPassword'">
-        <h2 class="card-text">修改密码</h2>
-        <el-form :model="user">
-            <el-form-item>
-                <el-input class="form-item" v-model="user.email" placeholder="邮箱" />
-            </el-form-item>
-            <el-form-item>
-                <el-input class="form-item" v-model="user.password" placeholder="新密码" show-password />
-            </el-form-item>
-            <el-form-item>
-                <el-input class="form-item" v-model="user.rePassword" placeholder="再次输入密码" show-password />
-            </el-form-item>
-            <div class="box-code">
-                <el-input class="input-code" v-model="user.verificationCode" placeholder="验证码" />
-                <el-button class="send" type="success" :disabled="countDown !== duration" @click="send">{{ countDown <
-                    duration ? `${countDown}S` : '发送验证码' }} </el-button>
-            </div>
-
-            <el-form-item>
-                <el-radio-group v-model="user.role">
-                    <el-radio :value="'resident'">居民</el-radio>
-                    <el-radio :value="'doctor'">医护人员</el-radio>
-                    <el-radio :value="'admin'">管理员</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item>
-                <el-button class="form-item btn-affirm" type="primary" @click="changePassword()">修改</el-button>
-            </el-form-item>
-        </el-form>
-        <div class="other-option">
-            <span @click="pageState = 'login'">登录</span>
-            <span @click="pageState = 'register'">注册</span>
-        </div>
-    </el-card>
 </template>
 
 <style scoped>
+.container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
 .box-img {
     background-image: url("../../public/background.jpg");
     background-size: cover;
@@ -240,7 +252,7 @@ const changePassword = async () => {
     top: 8%;
     left: 75%;
     transform: translate(-50%, -50%);
-    color: #409eff;
+    color: #2c3e50;
 }
 
 .card {

@@ -12,7 +12,7 @@ import Header from '@/components/Header.vue';
     <Header></Header>
     <main>
         <div style="display: flex;">
-            <el-menu default-active="/resident/archives/self-info" router style="width: 10%;min-width: 150px">
+            <el-menu default-active="/resident/archives/self-info" router style="width: 10%;min-width: 150px;height: 89vh;">
                 <el-sub-menu index="/resident/archives/self-info">
                     <template #title>
                         <el-icon>
@@ -49,5 +49,4 @@ import Header from '@/components/Header.vue';
 </template>
 
 <style scoped>
-
 </style>

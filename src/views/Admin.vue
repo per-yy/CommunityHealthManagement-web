@@ -8,13 +8,19 @@ import {
     Document
 } from '@element-plus/icons-vue';
 import Header from '@/components/Header.vue';
+import { onBeforeMount } from 'vue';
+import { getAdminInfoService } from '@/api/admin';
+//访问管理员信息查询接口，用户后端判断角色拦截
+onBeforeMount(async () => {
+    await getAdminInfoService();
+})
 </script>
 
 <template>
     <Header></Header>
     <main>
         <div style="display: flex;">
-            <el-menu default-active="/admin/user/resident" router style="width: 10%;min-width: 150px">
+            <el-menu default-active="/admin/user/resident" router style="width: 10%;min-width: 150px;height: 89vh;">
                 <el-sub-menu index="/admin/user/resident">
                     <template #title>
                         <el-icon>

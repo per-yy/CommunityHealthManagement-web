@@ -18,6 +18,7 @@ import DiagnosticRecord from '@/views/doctor/DiagnosticRecord.vue';
 import ConsultationD from '@/views/doctor/Consultation.vue';
 import AppointmentD from '@/views/doctor/Appointment.vue';
 import ActivityD from '@/views/doctor/Activity.vue';
+import ResidentD from '@/views/doctor/Resident.vue';
 //管理端
 import ResidentA from '@/views/admin/user/Resident.vue';
 import DoctorA from '@/views/admin/user/Doctor.vue';
@@ -47,6 +48,7 @@ const staticRoutes = [
             { path: '/doctor/consultation', component: ConsultationD },
             { path: '/doctor/appointment', component: AppointmentD },
             { path: '/doctor/activity', component: ActivityD },
+            { path: '/doctor/resident', component: ResidentD },
         ]
     },
     {

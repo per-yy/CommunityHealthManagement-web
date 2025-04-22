@@ -55,15 +55,20 @@ onBeforeMount(async () => {
             <el-table-column prop="title" label="标题" />
             <el-table-column prop="startTime" label="开始时间" width="165px" />
             <el-table-column prop="endTime" label="结束时间" width="165px" />
-            <el-table-column prop="capacity" label="名额上限" width="85px" />
+            <el-table-column label="名额上限" width="85px">
+                <template #default="scope">
+                    {{ scope.row.capacity == 0 ? '不限' : `${scope.row.capacity}` }}
+                </template>
+            </el-table-column>
             <el-table-column prop="registered" label="已报人数" width="85px" />
             <el-table-column fixed="right" label="状态" width="80">
                 <template #default="scope">
                     <el-button link
-                        :type="scope.row.isJoined == 1 ? 'success' : (scope.row.capacity > scope.row.registered ? 'primary' : 'danger')"
+                        :type="scope.row.isJoined == 1 ? 'success' : (scope.row.capacity == 0 ? 'primary' : (scope.row.capacity > scope.row.registered ? 'primary' : 'danger'))"
                         size="small" @click="showDetail(scope.row)"
-                        :disabled="scope.row.registered >= scope.row.capacity || scope.row.isJoined == 1">
-                        {{ scope.row.isJoined == 1 ? '已报' : (scope.row.capacity > scope.row.registered ? '详情' : '已满')
+                        :disabled="(scope.row.registered >= scope.row.capacity && scope.row.capacity != 0) || scope.row.isJoined == 1">
+                        {{ scope.row.isJoined == 1 ? '已报' : (scope.row.capacity == 0 ? '详情' : (scope.row.capacity >
+                            scope.row.registered ? '详情' : '已满'))
                         }}
                     </el-button>
                 </template>

@@ -73,7 +73,11 @@ onBeforeMount(async () => {
             <el-table-column prop="title" label="标题" />
             <el-table-column prop="startTime" label="开始时间" width="165px" />
             <el-table-column prop="endTime" label="结束时间" width="165px" />
-            <el-table-column prop="capacity" label="名额上限" width="85px" />
+            <el-table-column prop="capacity" label="名额上限" width="85px">
+                <template #default="scope">
+                    {{ scope.row.capacity == 0 ? '不限' : `${scope.row.capacity}` }}
+                </template>
+            </el-table-column>
             <el-table-column prop="registered" label="已报人数" width="85px" />
             <el-table-column label="操作" width="100">
                 <template #default="scope">
@@ -87,8 +91,10 @@ onBeforeMount(async () => {
             </el-table-column>
             <el-table-column prop="tag" label="状态" width="70">
                 <template #default="scope">
-                    <el-tag :type="scope.row.capacity > scope.row.registered ? 'success' : 'warning'">{{
-                        scope.row.capacity > scope.row.registered ? '未满' : '已满' }}</el-tag>
+                    <el-tag
+                        :type="scope.row.capacity == 0 ? 'success' : (scope.row.capacity > scope.row.registered ? 'success' : 'warning')">{{
+                            scope.row.capacity == 0 ? '未满' : (scope.row.capacity > scope.row.registered ? '未满' : '已满')
+                        }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column type="expand" label="名单" width="60">

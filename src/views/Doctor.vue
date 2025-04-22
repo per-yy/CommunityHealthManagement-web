@@ -4,7 +4,8 @@ import {
     Document,
     ChatSquare,
     Service,
-    MapLocation
+    MapLocation,
+    User
 } from '@element-plus/icons-vue';
 import Header from '@/components/Header.vue';
 </script>
@@ -13,12 +14,18 @@ import Header from '@/components/Header.vue';
     <Header></Header>
     <main>
         <div style="display: flex;">
-            <el-menu default-active="/doctor/self-info" router style="width: 10%;min-width: 150px">
+            <el-menu default-active="/doctor/self-info" router style="width: 10%;min-width: 150px;height: 89vh;">
                 <el-menu-item index="/doctor/self-info">
                     <el-icon>
                         <Memo />
                     </el-icon>
                     <span>个人信息</span>
+                </el-menu-item>
+                <el-menu-item index="/doctor/resident">
+                    <el-icon>
+                        <User />
+                    </el-icon>
+                    <span>居民管理</span>
                 </el-menu-item>
                 <el-menu-item index="/doctor/diagnostic-record">
                     <el-icon>

@@ -1,21 +1,51 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, onBeforeUnmount, shallowRef } from 'vue';
 import { getResidentListService } from '@/api/resident';
-import { deleteUserService, getUserInfoByResidentIdService } from '@/api/user';
 import { getHealthInfoByResidentIdService } from '@/api/healthInfo';
-import { getHealthReportService } from '@/api/healthReport';
+import { getHealthReportService, updateHealthReportService } from '@/api/healthReport'
+import '@wangeditor/editor/dist/css/style.css';
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import {
     Back
 } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
+
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef();
+//工具栏配置
+const toolbarConfig = {};
+//排除一些工具栏选项
+toolbarConfig.excludeKeys = [
+    'fullScreen',//全屏
+    'group-video',//视频
+    'group-image'//图片
+]
+// 组件销毁时销毁编辑器
+onBeforeUnmount(() => {
+    const editor = editorRef.value;
+    if (editor == null) return;
+    editor.destroy();
+});
+
+// 编辑器回调函数
+const handleCreated = (editor) => {
+    // console.log('created', editor);
+    editorRef.value = editor; // 记录 editor 实例，重要！
+};
+
+//允许粘贴
+const customPaste = (editor, event, callback) => {
+    callback(true); // 返回 false ，阻止默认粘贴行为
+    // callback(true) // 返回 true ，继续默认的粘贴行为
+};
+
 const residents = ref({})
-const userInfo = ref({})
-const residentInfo = ref({})
 const healthInfo = ref({})
 const healthReport = ref({})
-const userInfoDialog = ref(false)
+//健康报告的内容
+// const content=ref('')
 const healthInfoDialog = ref(false)
-const deleteConfirmDialog = ref(false)
-const pageState = ref("list")
+const pageState = ref('list')
 //分页查询时的当前页和页面大小
 const pageQueryDto = ref({
     pageNum: 1,
@@ -31,26 +61,16 @@ const pageChange = async (newPage) => {
     pageQueryDto.value.pageNum = newPage;
     await getResidentList(pageQueryDto.value);
 }
-//查询账号信息
-const getUserInfo = async (residentId) => {
-    let result = await getUserInfoByResidentIdService(residentId);
-    userInfo.value = result.data;
-}
+
 //查询健康信息
 const getHealthInfo = async (residentId) => {
     let result = await getHealthInfoByResidentIdService(residentId);
     healthInfo.value = result.data;
 }
-//查看账号信息
-const viewUserInfo = async (row) => {
-    residentInfo.value = row;
-    await getUserInfo(row.id);
-    userInfoDialog.value = true;
-}
+
 //查看健康信息
-const viewHealthInfo = async (row) => {
-    residentInfo.value = row;
-    await getHealthInfo(row.id);
+const viewHealthInfo = async (id) => {
+    await getHealthInfo(id);
     healthInfoDialog.value = true;
 }
 //查看健康报告
@@ -60,17 +80,11 @@ const viewHealthReport = async (id) => {
     healthReport.value = result.data;
     pageState.value = 'viewReport'
 }
-//删除确认
-const deleteConfirm = async (row) => {
-    residentInfo.value = row;
-    await getUserInfo(row.id);
-    deleteConfirmDialog.value = true;
-}
-//删除居民所有信息
-const deleteUser = async () => {
-    await deleteUserService(userInfo.value.id);
-    await getResidentList(pageQueryDto.value);
-    deleteConfirmDialog.value = false;
+//更新报告
+const updateHealthReport = () => {
+    updateHealthReportService(healthReport.value);
+    pageState.value = 'viewReport'
+    ElMessage.success("修改成功")
 }
 onBeforeMount(async () => {
     //查询居民就诊记录
@@ -94,19 +108,13 @@ onBeforeMount(async () => {
             </el-table-column>
             <el-table-column prop="age" label="年龄" width="180px" />
             <el-table-column prop="address" label="住址" />
-            <el-table-column label="操作" width="254px">
+            <el-table-column label="操作" width="190px">
                 <template #default="scope">
-                    <el-button size="small" link type="primary" @click="viewUserInfo(scope.row)">
-                        账号信息
-                    </el-button>
-                    <el-button size="small" link type="success" @click="viewHealthInfo(scope.row)">
+                    <el-button size="small" link type="success" @click="viewHealthInfo(scope.row.id)">
                         健康信息
                     </el-button>
-                    <el-button size="small" link type="warning" @click="viewHealthReport(scope.row.id)">
+                    <el-button size="small" link type="primary" @click="viewHealthReport(scope.row.id)">
                         健康报告
-                    </el-button>
-                    <el-button size="small" link type="danger" @click="deleteConfirm(scope.row)">
-                        删除
                     </el-button>
                 </template>
             </el-table-column>
@@ -116,12 +124,13 @@ onBeforeMount(async () => {
                 :total="residents.total" @current-change="pageChange" />
         </div>
     </el-card>
-    <el-card v-else>
+    <el-card v-else-if="pageState == 'viewReport'">
         <el-icon @click="pageState = 'list'">
             <Back />
         </el-icon>
         <div class="option">
             <h4>健康报告</h4>
+            <el-button type="success" @click="pageState = 'editReport'">编辑</el-button>
         </div>
         <div class="content">
             <template v-if="healthReport.content">
@@ -134,55 +143,55 @@ onBeforeMount(async () => {
             </template>
         </div>
     </el-card>
-    <!-- 查看账号信息 -->
-    <el-dialog v-model="userInfoDialog" title="账号信息" width="320px" align-center center>
-        <el-descriptions column="1" size="large" border>
-            <el-descriptions-item label="用户名">{{ userInfo.username }}</el-descriptions-item>
-            <el-descriptions-item label="邮箱">{{ userInfo.email }}</el-descriptions-item>
-            <el-descriptions-item label="手机号">{{ userInfo.phone }}</el-descriptions-item>
-            <el-descriptions-item label="创建时间">{{ userInfo.createTime }}</el-descriptions-item>
-        </el-descriptions>
-    </el-dialog>
+    <el-card v-else>
+        <el-icon @click="pageState = 'viewReport'">
+            <Back />
+        </el-icon>
+        <div class="option">
+            <h4>编辑报告</h4>
+            <el-button type="success" @click="updateHealthReport()">提交</el-button>
+        </div>
+        <div style="border: 1px solid #ccc; margin-top: 10px">
+            <!-- 工具栏 -->
+            <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" class="toolbar" />
+            <!-- 编辑区域 -->
+            <div class="report">
+                <!-- 内容 -->
+                <Editor :defaultConfig="editorConfig" v-model="healthReport.content" class="editor"
+                    @onCreated="handleCreated" @customPaste="customPaste" />
+            </div>
+        </div>
+    </el-card>
+
     <!-- 查看健康信息 -->
     <el-dialog v-model="healthInfoDialog" title="健康信息" width="620px" align-center center>
         <el-descriptions direction="vertical" border :size="'large'" column="4">
             <el-descriptions-item label="身高(CM)">{{ healthInfo.height == 0 ? '暂无' : healthInfo.height
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="体重(KG)">{{ healthInfo.weight == 0 ? '暂无' : healthInfo.weight
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="BMI">{{ healthInfo.bmi == 0 ? '暂无' : healthInfo.bmi
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="心率(bpm)">{{ healthInfo.heartRate == 0 ? '暂无' : healthInfo.heartRate
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="收缩压(mmHg)">{{ healthInfo.bloodPressureHigh == 0 ? '暂无' :
                 healthInfo.bloodPressureHigh
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="舒张压(mmHg)">{{ healthInfo.bloodPressureLow == 0 ? '暂无' :
                 healthInfo.bloodPressureLow
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="血脂(mmol/L)">{{ healthInfo.bloodFat == 0 ? '暂无' : healthInfo.bloodFat
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="血糖(mmol/L)">{{ healthInfo.bloodGlucose == 0 ? '暂无' :
                 healthInfo.bloodGlucose
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="血型">{{ healthInfo.bloodType == null ? '暂无' : healthInfo.bloodType
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
             <el-descriptions-item label="病史">{{ healthInfo.medicalHistory == null ? '暂无' : healthInfo.medicalHistory
-            }}</el-descriptions-item>
+                }}</el-descriptions-item>
         </el-descriptions>
     </el-dialog>
-    <!-- 删除警告 -->
-    <el-dialog v-model="deleteConfirmDialog" title="确定要删除吗" width="300px" align-center center>
-        删除居民会一并删除账号信息和健康信息
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button @click="deleteConfirmDialog = false">取消</el-button>
-                <el-button type="primary" @click="deleteUser">
-                    确定
-                </el-button>
-            </div>
-        </template>
-    </el-dialog>
+
 </template>
 
 <style scoped>
@@ -209,5 +218,18 @@ onBeforeMount(async () => {
 .content {
     width: fit-content;
     margin: 0 auto;
+}
+
+.toolbar {
+    border-bottom: 1px solid #ccc;
+}
+
+.report {
+    padding: 40px;
+}
+
+.editor {
+    min-height: 400px;
+    overflow-y: hidden
 }
 </style>
